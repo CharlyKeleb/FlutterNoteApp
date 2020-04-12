@@ -11,16 +11,16 @@ class FadeSide extends StatelessWidget {
     @required this.child
   }):super(key: key);
 
+  final tween = MultiTrackTween([
+    Track("opacity")
+        .add(Duration(milliseconds: 500), Tween(begin: 0.0, end: 1.0)),
+    Track("translateX").add(
+        Duration(milliseconds: 500), Tween(begin: 130.0, end: 0.0),
+        curve: Curves.easeOut)
+  ]);
+
   @override
   Widget build(BuildContext context) {
-    final tween = MultiTrackTween([
-      Track("opacity")
-          .add(Duration(milliseconds: 500), Tween(begin: 0.0, end: 1.0)),
-      Track("translateX").add(
-          Duration(milliseconds: 500), Tween(begin: 130.0, end: 0.0),
-          curve: Curves.easeOut)
-    ]);
-
     return ControlledAnimation(
       delay: Duration(milliseconds: (300 * delay).round()),
       duration: tween.duration,

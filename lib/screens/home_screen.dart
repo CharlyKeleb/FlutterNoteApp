@@ -39,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
               return Padding(
                 padding: const EdgeInsets.only(left: 5.0, right: 5),
                 child: index<9?FadeIn(
-                  delay: (index+1).toDouble(),
+                  delay: 2,
                   child: _buildCardItems('Today\'s Activity '  , 'Today have been going very fantastic..', context),
                 ):_buildCardItems('Today\'s Activity '  , 'Today have been going very fantastic..', context),
               );
