@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:note_app/components/fade_in.dart';
+import 'package:note_app/components/fade_side.dart';
 import 'package:note_app/screens/note_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -8,14 +10,24 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMixin{
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
         appBar: AppBar(
-          title: Text('Notes'),
+          title: FadeSide(
+            delay: 1,
+            child: Text('Notes'),
+          ),
           actions: <Widget>[
-            IconButton(icon: Icon(Feather.search), onPressed: () {})
+            FadeSide(
+              delay: 2,
+              child: IconButton(
+                icon: Icon(Feather.search),
+                onPressed: () {},
+              ),
+            ),
           ],
         ),
         body: ListView.builder(
@@ -26,21 +38,23 @@ class _HomeScreenState extends State<HomeScreen> {
             itemBuilder: (BuildContext context, int index) {
               return Padding(
                 padding: const EdgeInsets.only(left: 5.0, right: 5),
-                child: Column(
-                  children: <Widget>[
-                    _buildCardItems('Today\'s Activity '  , 'Today have been going very fantastic..', context)
-                  ],
-                ),
+                child: index<9?FadeIn(
+                  delay: (index+1).toDouble(),
+                  child: _buildCardItems('Today\'s Activity '  , 'Today have been going very fantastic..', context),
+                ):_buildCardItems('Today\'s Activity '  , 'Today have been going very fantastic..', context),
               );
             },
         ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Feather.plus),
-        onPressed: (){
-          Navigator.push(context, MaterialPageRoute(
-            builder: (_) => Notes()
-          ));
-        },
+      floatingActionButton: FadeSide(
+        delay: 11,
+        child: FloatingActionButton(
+          child: Icon(Feather.plus),
+          onPressed: (){
+            Navigator.push(context, MaterialPageRoute(
+              builder: (_) => Notes()
+            ));
+          },
+        ),
       ),
     );
   }
@@ -73,4 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
