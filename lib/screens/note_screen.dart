@@ -35,11 +35,13 @@ class _NotesState extends State<Notes> {
               child: Column(
                 children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Text(
-                      'Note Title',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
+                    padding: const EdgeInsets.all(1.0),
+                    child: TextField(
+                      textAlign: TextAlign.center,
+                      decoration: InputDecoration.collapsed(
+                        hintText: 'Note Title', hintStyle: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    )
                   ),
                   Padding(
                     padding: const EdgeInsets.only(right: 15.0, left: 15.0),
