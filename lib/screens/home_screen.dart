@@ -82,34 +82,39 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Widget _buildCardItems(String noteTitle, String note, context) {
-    return Container(
-      height: 90,
-      width: MediaQuery.of(context).size.width - 10,
-      child: Card(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        child: Stack(
-          children: <Widget>[
-            Positioned(
-              top: 10,
-              left: 20,
-              child: Text(
-                noteTitle,
-                style: TextStyle(fontWeight: FontWeight.w600),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(builder: (_) => ViewScreen()));
+      },
+      child: Container(
+        height: 90,
+        width: MediaQuery.of(context).size.width - 10,
+        child: Card(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          child: Stack(
+            children: <Widget>[
+              Positioned(
+                top: 10,
+                left: 20,
+                child: Text(
+                  noteTitle,
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                ),
               ),
-            ),
-            Positioned(
-              top: 30,
-              left: 20,
-              child: Column(
-                children: <Widget>[
-                  Text(
-                    note,
-                    style: TextStyle(fontSize: 13, color: Colors.grey),
-                  ),
-                ],
-              ),
-            )
-          ],
+              Positioned(
+                top: 30,
+                left: 20,
+                child: Column(
+                  children: <Widget>[
+                    Text(
+                      note,
+                      style: TextStyle(fontSize: 13, color: Colors.grey),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
