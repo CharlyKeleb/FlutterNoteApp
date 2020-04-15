@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:note_app/database/note_helper.dart';
+import 'package:note_app/model/note.dart';
 
 class Notes extends StatefulWidget {
   final title;
@@ -12,6 +14,19 @@ class Notes extends StatefulWidget {
 }
 
 class _NotesState extends State<Notes> {
+
+  TextEditingController _title = TextEditingController();
+  TextEditingController _content = TextEditingController();
+
+  saveNote(){
+    NoteHelper().saveNote(
+      Note(
+        "${_title.text}",
+        "${_content.text}",
+      ),
+    ).then((value) => Navigator.pop(context));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,7 +37,10 @@ class _NotesState extends State<Notes> {
           style: TextStyle(fontWeight: FontWeight.w400),
         ),
         actions: <Widget>[
-          IconButton(icon: Icon(Feather.save), onPressed: () {})
+          IconButton(
+            icon: Icon(Feather.save),
+            onPressed: () => saveNote(),
+          ),
         ],
       ),
       body: ListView(
@@ -37,6 +55,7 @@ class _NotesState extends State<Notes> {
                   Padding(
                     padding: const EdgeInsets.all(1.0),
                     child: TextField(
+                      controller: _title,
                       textAlign: TextAlign.center,
                       decoration: InputDecoration.collapsed(
                         hintText: 'Note Title', hintStyle: TextStyle(fontWeight: FontWeight.bold),
@@ -56,6 +75,7 @@ class _NotesState extends State<Notes> {
                       Padding(
                         padding: const EdgeInsets.only(left: 10.0),
                         child: TextField(
+                          controller: _content,
                           maxLines: null,
                           decoration: InputDecoration.collapsed(
                               hintText: 'Type Notes...'),

@@ -4,6 +4,8 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:note_app/components/fade_in.dart';
 import 'package:note_app/components/fade_side.dart';
+import 'package:note_app/database/note_helper.dart';
+import 'package:note_app/model/note.dart';
 import 'package:note_app/screens/note_screen.dart';
 import 'package:note_app/screens/view_screen.dart';
 
@@ -12,10 +14,33 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-
-
 class _HomeScreenState extends State<HomeScreen>
     with AutomaticKeepAliveClientMixin {
+  List<Note> notes = List();
+  bool loading = true;
+
+  getNotes(){
+    notes.clear();
+    setState(() {
+      loading = true;
+    });
+    NoteHelper().getNotes().then((value){
+      print(value);
+      value.forEach((element) {
+        notes.add(Note.fromMap(element));
+      });
+      setState(() {
+        loading = false;
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    getNotes();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -36,8 +61,10 @@ class _HomeScreenState extends State<HomeScreen>
           ),
         ],
       ),
-      body: ListView.builder(
-        itemCount: 10,
+      body: loading?Center(child: CircularProgressIndicator()):notes.isEmpty
+          ? Center(child: Text("No notes"))
+          : ListView.builder(
+        itemCount: notes.length,
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
         physics: AlwaysScrollableScrollPhysics(),
@@ -63,11 +90,9 @@ class _HomeScreenState extends State<HomeScreen>
               child: index < 9
                   ? FadeIn(
                       delay: 2,
-                      child: _buildCardItems('Today\'s Activity ',
-                          'Today have been going very fantastic..', context),
+                      child: _buildCardItems(notes[index], context),
                     )
-                  : _buildCardItems('Today\'s Activity ',
-                      'Today have been going very fantastic..', context),
+                  : _buildCardItems(notes[index], context),
             ),
           );
         },
@@ -77,14 +102,19 @@ class _HomeScreenState extends State<HomeScreen>
         child: FloatingActionButton(
           child: Icon(Feather.plus),
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (_) => Notes()));
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => Notes(),
+              ),
+            ).then((value) => getNotes());
           },
         ),
       ),
     );
   }
 
-  Widget _buildCardItems(String noteTitle, String note, context) {
+  Widget _buildCardItems(Note note, context) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -98,33 +128,32 @@ class _HomeScreenState extends State<HomeScreen>
         );
       },
       child: Container(
-        height: 90,
-        width: MediaQuery.of(context).size.width - 10,
         child: Card(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          child: Stack(
-            children: <Widget>[
-              Positioned(
-                top: 10,
-                left: 20,
-                child: Text(
-                  noteTitle,
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  note.title,
                   style: TextStyle(fontWeight: FontWeight.w600),
+                  maxLines: 1,
                 ),
-              ),
-              Positioned(
-                top: 30,
-                left: 20,
-                child: Column(
-                  children: <Widget>[
-                    Text(
-                      note,
-                      style: TextStyle(fontSize: 13, color: Colors.grey),
-                    ),
-                  ],
+
+                SizedBox(height: 5,),
+
+                Text(
+                  note.content,
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: Colors.grey,
+                  ),
+                  maxLines: 3,
                 ),
-              )
-            ],
+              ],
+            ),
           ),
         ),
       ),
