@@ -22,7 +22,7 @@ void main() async {
     );
   }
 
-  Future<List<Note>> note() async {
+  Future<List<Note>> listNotes() async {
     final Database db = await database;
 
     final List<Map<String, dynamic>> maps = await db.query('note');
@@ -54,13 +54,13 @@ void main() async {
   }
    var work = Note(0, 'Activity', 'Here we come');
   await insertNote(work);
-  print(await note());
+  print(await listNotes());
 
   work = Note(work.id, work.title, work.notes);
   await updateNote(work);
-  print(await note());
+  print(await listNotes());
   await deleteNote(work.id);
-  print(await note());
+  print(await listNote());
 }
 
 class Note {
