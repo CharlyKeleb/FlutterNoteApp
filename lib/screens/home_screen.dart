@@ -84,7 +84,15 @@ class _HomeScreenState extends State<HomeScreen>
   Widget _buildCardItems(String noteTitle, String note, context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (_) => ViewScreen()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ViewScreen(
+              note: "luewgofiflv",
+              noteTitle: "Test Title",
+            ),
+          ),
+        );
       },
       child: Container(
         height: 90,
