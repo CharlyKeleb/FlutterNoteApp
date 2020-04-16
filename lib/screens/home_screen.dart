@@ -35,6 +35,8 @@ class _HomeScreenState extends State<HomeScreen>
     });
   }
 
+
+
   @override
   void initState() {
     getNotes();
@@ -72,21 +74,11 @@ class _HomeScreenState extends State<HomeScreen>
           return Slidable(
             actionPane: SlidableDrawerActionPane(),
             secondaryActions: <Widget>[
-              IconSlideAction(
-                icon: (Feather.edit),
-                color: Colors.blue,
-                onTap: () {
-                  Navigator.push(
-                      context, MaterialPageRoute(builder: (_) => ViewScreen()));
-                },
-              ),
+
               IconSlideAction(
                 icon: (Feather.trash_2),
                 color: Colors.red,
-                onTap:  () {
-                  Navigator.push(
-                      context, MaterialPageRoute(builder: (_) => ViewScreen()));
-                },
+                onTap:  () => NoteHelper().deleteNote(notes[index].id).then((value) => getNotes())
               )
             ],
             child: Padding(
@@ -125,8 +117,8 @@ class _HomeScreenState extends State<HomeScreen>
           context,
           MaterialPageRoute(
             builder: (_) => ViewScreen(
-              note: "luewgofiflv",
-              noteTitle: "Test Title",
+              note: note.content,
+              noteTitle: note.title,
             ),
           ),
         );
