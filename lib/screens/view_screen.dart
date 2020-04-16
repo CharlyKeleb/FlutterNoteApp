@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:note_app/database/note_helper.dart';
+
 
 class ViewScreen extends StatefulWidget {
   final note;
@@ -23,6 +25,8 @@ class _ViewScreenState extends State<ViewScreen> {
     super.initState();
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,13 +41,17 @@ class _ViewScreenState extends State<ViewScreen> {
                         ? Feather.check
                         : Feather.edit_2
                 ),
-                onPressed: () {
+                onPressed: () async{
+                  await NoteHelper().updateNote(widget.note);
                   setState(() {
                     isEdit = !isEdit;
                   });
                 },
               ),
-              IconButton(icon: Icon(Feather.trash_2), onPressed: () {}),
+              IconButton(icon: Icon(Feather.trash_2), onPressed: () async {
+                await NoteHelper().deleteNote(widget.note['id']);
+              },
+              ),
             ],
           ),
         ],

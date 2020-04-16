@@ -83,6 +83,10 @@ class _HomeScreenState extends State<HomeScreen>
               IconSlideAction(
                 icon: (Feather.trash_2),
                 color: Colors.red,
+                onTap:  () {
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (_) => ViewScreen()));
+                },
               )
             ],
             child: Padding(
