@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-import 'package:note_app/components/fade_in.dart';
+//import 'package:note_app/components/fade_in.dart';
 import 'package:note_app/components/fade_side.dart';
 import 'package:note_app/database/note_helper.dart';
+import 'package:note_app/delegate/customsearch.dart';
 import 'package:note_app/model/note.dart';
 import 'package:note_app/screens/note_screen.dart';
 import 'package:note_app/screens/view_screen.dart';
@@ -57,7 +58,12 @@ class _HomeScreenState extends State<HomeScreen>
             delay: 2,
             child: IconButton(
               icon: Icon(Feather.search),
-              onPressed: () {},
+              onPressed: () {
+                showSearch(
+                  context:  context,
+                  delegate: CustomSearchDelegate(),
+                );
+              },
             ),
           ),
         ],
@@ -163,3 +169,5 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   bool get wantKeepAlive => true;
 }
+
+
