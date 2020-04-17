@@ -4,11 +4,10 @@ import 'package:note_app/database/note_helper.dart';
 import 'package:note_app/model/note.dart';
 
 class ViewScreen extends StatefulWidget {
-  final note;
-  final noteTitle;
+  Note note;
   final bool isEdit;
 
-  const ViewScreen({Key key, this.note, this.noteTitle, this.isEdit = false})
+  ViewScreen({Key key, this.note, this.isEdit = false})
       : super(key: key);
 
   @override
@@ -19,7 +18,7 @@ class _ViewScreenState extends State<ViewScreen> {
 
   TextEditingController _title = TextEditingController();
   TextEditingController _content = TextEditingController();
-
+  FocusNode titleFocus = FocusNode();
   bool isEdit = false;
 
   @override
@@ -28,13 +27,19 @@ class _ViewScreenState extends State<ViewScreen> {
     super.initState();
   }
 
-  updateNote() {
-    NoteHelper().updateNote(Note(
-      "${_title.text}",
-      "${_content.text}",
-    ));
+  updateNote() async{
+    int edit = await NoteHelper().updateNote(
+      Note.fromMap(
+        {
+          "id": widget.note.id,
+          "title": _title.text,
+          "content": _content.text,
+        },
+      ),
+    );
+    print(edit);
+    Navigator.pop(context);
   }
-
 
   saveNote(){
     NoteHelper().saveNote(
@@ -69,7 +74,7 @@ class _ViewScreenState extends State<ViewScreen> {
           padding: const EdgeInsets.only(top: 10.0),
           child: Center(
             child: Text(
-              widget.noteTitle,
+              widget.note.title,
               style: TextStyle(fontWeight: FontWeight.w700),
             ),
           ),
@@ -80,7 +85,7 @@ class _ViewScreenState extends State<ViewScreen> {
         Padding(
           padding: const EdgeInsets.only(left: 15.0),
           child: Text(
-            widget.note,
+            widget.note.content,
             style: TextStyle(fontSize: 16),
           ),
         ),
@@ -95,8 +100,10 @@ class _ViewScreenState extends State<ViewScreen> {
         children: <Widget>[
           Flexible(
             child: TextField(
+              controller: _title,
+              focusNode: titleFocus,
               decoration: InputDecoration.collapsed(
-                hintText: widget.noteTitle,
+                hintText: widget.note.title,
                 hintStyle: TextStyle(
                   fontWeight: FontWeight.w700,
                 ),
@@ -110,9 +117,11 @@ class _ViewScreenState extends State<ViewScreen> {
           Padding(
             padding: const EdgeInsets.only(left: 15.0),
             child: TextField(
+              controller: _content,
               decoration: InputDecoration.collapsed(
-                  hintText: widget.note,
-                  hintStyle: TextStyle(fontWeight: FontWeight.w700)),
+                hintText: widget.note.content,
+                hintStyle: TextStyle(fontWeight: FontWeight.w700),
+              ),
             ),
           )
         ],
@@ -121,25 +130,28 @@ class _ViewScreenState extends State<ViewScreen> {
   }
 
   _buildSaveEdit() {
-
-    if(isEdit)
+    if(isEdit) {
       return IconButton(
         icon: Icon( Feather.check),
         onPressed: () async {
-          await saveNote();
+          await updateNote();
           setState(() {
             isEdit = !isEdit;
           });
         },
       );
-    else return  IconButton(
-      icon: Icon( Feather.edit_2),
-      onPressed: () async {
-        await updateNote();
-        setState(() {
-          isEdit = !isEdit;
-        });
-      },
-    );
+    }else {
+      return  IconButton(
+        icon: Icon( Feather.edit_2),
+        onPressed: () async {
+          setState(() {
+            _title.text = widget.note.title;
+            _content.text = widget.note.content;
+            isEdit = !isEdit;
+            titleFocus.requestFocus();
+          });
+        },
+      );
+    }
   }
 }

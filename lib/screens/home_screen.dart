@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:note_app/components/fade_in.dart';
 import 'package:note_app/components/fade_side.dart';
 import 'package:note_app/database/note_helper.dart';
@@ -71,24 +70,17 @@ class _HomeScreenState extends State<HomeScreen>
         shrinkWrap: true,
         physics: AlwaysScrollableScrollPhysics(),
         itemBuilder: (BuildContext context, int index) {
-          return Slidable(
-            actionPane: SlidableDrawerActionPane(),
-            secondaryActions: <Widget>[
-
-              IconSlideAction(
-                icon: (Feather.trash_2),
-                color: Colors.red,
-                onTap:  () => NoteHelper().deleteNote(notes[index].id).then((value) => getNotes())
-              )
-            ],
+          return Dismissible(
+            key: ObjectKey(notes[index].id),
+            background: stackBehindDismiss(),
+            direction: DismissDirection.endToStart,
+            onDismissed: (direction) async{
+              await NoteHelper().deleteNote(notes[index].id);
+              notes.removeAt(index);
+            },
             child: Padding(
               padding: const EdgeInsets.only(left: 5.0, right: 5),
-              child: index < 9
-                  ? FadeIn(
-                      delay: 2,
-                      child: _buildCardItems(notes[index], context),
-                    )
-                  : _buildCardItems(notes[index], context),
+              child: _buildCardItems(notes[index], context),
             ),
           );
         },
@@ -117,13 +109,13 @@ class _HomeScreenState extends State<HomeScreen>
           context,
           MaterialPageRoute(
             builder: (_) => ViewScreen(
-              note: note.content,
-              noteTitle: note.title,
+              note: note,
             ),
           ),
-        );
+        ).then((value) => getNotes());
       },
       child: Container(
+        width: MediaQuery.of(context).size.width,
         child: Card(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           child: Padding(
@@ -152,6 +144,18 @@ class _HomeScreenState extends State<HomeScreen>
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget stackBehindDismiss() {
+    return Container(
+      alignment: Alignment.centerRight,
+      padding: EdgeInsets.only(right: 20.0),
+      color: Colors.red,
+      child: Icon(
+        Icons.delete,
+        color: Colors.white,
       ),
     );
   }
