@@ -54,6 +54,7 @@ class CustomSearchDelegate extends SearchDelegate {
       scrollDirection: Axis.vertical,
         shrinkWrap: true,
         physics: AlwaysScrollableScrollPhysics(),
+        itemCount: notes.length,
         itemBuilder: (BuildContext context, int index) {
         return Column(
           children: <Widget>[

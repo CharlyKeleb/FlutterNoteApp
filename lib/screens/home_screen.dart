@@ -61,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen>
               onPressed: () {
                 showSearch(
                   context:  context,
-                  delegate: CustomSearchDelegate(),
+                  delegate: CustomSearchDelegate(context,),
                 );
               },
             ),
